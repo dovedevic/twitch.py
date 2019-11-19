@@ -1,4 +1,4 @@
-from .errors import APIMissMatchException, NotAuthorizedError
+from .errors import APIMissMatchException, NotAuthorizedException
 from .channel import WhisperChannel
 
 

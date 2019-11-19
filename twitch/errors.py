@@ -17,9 +17,19 @@ class APIMissMatchException(TwitchException):
     pass
 
 
-class NotAuthorizedError(TwitchException):
+class NotAuthorizedException(TwitchException):
     """
     Exception thrown when an API call is made such that the client and token are not authorized to do
 
     If thrown, the user must be granted permission for said API call
     """
+    pass
+
+
+class NoPossibleConversionException(TwitchException):
+    """
+    Exception thrown when a conversion or comparison is performed and no such defined conversion is defined
+
+    If thrown, the user probably did something dumb
+    """
+    pass
