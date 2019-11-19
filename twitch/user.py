@@ -1,4 +1,4 @@
-from .errors import APIMissMatchException, NotAuthorizedException
+from .errors import APIMissMatchException, NotAuthorizedException, NoPossibleConversionException
 from .channel import WhisperChannel
 
 
@@ -51,6 +51,31 @@ class PartialUser:
     def __init__(self, _id, _username):
         self._id = _id
         self._username = _username
+
+    def __str__(self):
+        return self._username
+
+    def __repr__(self):
+        return f"<PartialUser - id:{self._id} username:{self._username}>"
+
+    def __eq__(self, other):
+        if isinstance(other, PartialUser) or isinstance(other, User):
+            return other.id == self._id
+        elif isinstance(other, int):
+            return other == self._id
+        else:
+            raise NoPossibleConversionException(f"Cannot compare type <{type(PartialUser)}> to <{type(other)}>")
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def username(self):
+        return self._username
 
     async def fetch_user(self):
         # TODO:: return await core.get_user(self._id)
