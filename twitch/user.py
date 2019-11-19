@@ -42,6 +42,21 @@ class TwitchUserType:
             raise APIMissMatchException(f'TwitchUserType<{utype}> is not valid!')
 
 
+class PartialUser:
+    """
+    Defines a partial twitch user
+    """
+    __slots__ = ('_id', '_username')
+
+    def __init__(self, _id, _username):
+        self._id = _id
+        self._username = _username
+
+    async def fetch_user(self):
+        # TODO:: return await core.get_user(self._id)
+        pass
+
+
 class User(WhisperChannel):
     """
     Defines a twitch user
@@ -82,7 +97,7 @@ class User(WhisperChannel):
         if self._email:
             return self._email
         else:
-            raise NotAuthorizedError("You are not authorized to view this user's email")
+            raise NotAuthorizedException("You are not authorized to view this user's email")
 
     @property
     def profile_url(self):
