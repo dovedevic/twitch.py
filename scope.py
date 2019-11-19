@@ -68,11 +68,11 @@ class Scope:
         _writeonly = 'chat:edit'
 
         @classmethod
-        def readonly(cls):
+        def read(cls):
             return cls._readonly
 
         @classmethod
-        def writeonly(cls):
+        def write(cls):
             return cls._writeonly
 
     class Whispers:
@@ -83,11 +83,11 @@ class Scope:
         _sendonly = 'whispers:edit'
 
         @classmethod
-        def readonly(cls):
+        def read(cls):
             return cls._readonly
 
         @classmethod
-        def sendonly(cls):
+        def send(cls):
             return cls._sendonly
 
     class Clips:
