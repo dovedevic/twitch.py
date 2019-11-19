@@ -1,6 +1,41 @@
 from .errors import NoPossibleConversionException
 
 
+class PartialGame:
+    """
+    Defines a partial twitch game
+    """
+    __slots__ = ('_id')
+
+    def __init__(self, _id):
+        self._id = _id
+
+    def __str__(self):
+        return "None"
+
+    def __repr__(self):
+        return f"<PartialUser - id:{self._id}>"
+
+    def __eq__(self, other):
+        if isinstance(other, PartialGame) or isinstance(other, Game):
+            return other.id == self._id
+        elif isinstance(other, int):
+            return other == self._id
+        else:
+            raise NoPossibleConversionException(f"Cannot compare type <{type(PartialGame)}> to <{type(other)}>")
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    @property
+    def id(self):
+        return self._id
+
+    async def fetch_game(self):
+        # TODO:: return await core.get_game(self._id)
+        pass
+
+
 class Game:
     """
     Defines a twitch game
