@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import logging
+import websocket
 
 from .errors import TwitchException
 
@@ -95,3 +96,32 @@ class HTTPConnection:
                 params += f'&id={g}'
 
         return await self.request('GET', f'/games{params}')
+
+
+class WSConnection(HTTPConnection):
+    def __init__(self, client_id, capabilities: list, *, loop=None):
+        super().__init__(client_id, [], loop=loop)
+        # TODO: Create IRC capability object
+        self._capabilities = capabilities
+
+    async def irc_connect(self, channel, nick, oauth):
+        async with aiohttp.ClientSession() as session:
+            async with session.ws_connect('wss://irc-ws.chat.twitch.tv:443/') as ws:
+                logger.debug('IRC Connection started')
+                if oauth.startswith('oauth'):
+                    await ws.send_str(f'PASS {oauth}')
+                else:
+                    await ws.send_str(f'PASS oauth:{oauth}')
+
+                await ws.send_str(f'NICK {nick}')
+                await ws.send_str(f'JOIN #{channel}')
+
+                # TODO: Replace with irc capabilities sending "CAP REQ :<cap>"
+                # required to send messages
+                await ws.send_str('CAP REQ :twitch.tv/membership')
+                # required to get full user info and use commands
+                await ws.send_str(f'CAP REQ :twitch.tv/tags twitch.tv/commands')
+
+                while True:
+                    res = await ws.receive()
+                    print(res)

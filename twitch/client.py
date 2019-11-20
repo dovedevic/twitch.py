@@ -5,7 +5,7 @@ import typing
 from datetime import datetime
 from .game import Game, PartialGame
 from .extension import Extension
-from .http import HTTPConnection
+from .http import HTTPConnection, WSConnection
 from .errors import TwitchException
 from .user import User, PartialUser, BannedPartialUser
 from .stream import Stream
@@ -25,6 +25,7 @@ class Twitch:
         self._capabilities = capabilities or []
         self._refresh_token = None
         self.http = HTTPConnection(client_id, self._capabilities, loop=self.loop)
+        self.ws = WSConnection(client_id, [], loop=self.loop)
 
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
     
@@ -275,6 +276,13 @@ class Twitch:
 
         if not self.loop.is_closed():
             self.loop.close()
+
+    def start_irc(self, channel_name, nickname, oauth):
+        self.loop.create_task(self._connect(channel_name, nickname, oauth))
+        self.loop.run_forever()
+
+    async def _connect(self, name, nick, oauth):
+        await self.ws.irc_connect(name, nick, oauth)
 
     def is_closed(self):
         return self.loop.is_closed()
