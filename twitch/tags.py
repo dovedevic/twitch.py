@@ -16,9 +16,9 @@ class Tag:
         self._localization_descriptions = data['localization_descriptions']
 
     def __eq__(self, other):
-        if isinstance(other, PartialUser) or isinstance(other, Tag):
+        if isinstance(other, Tag):
             return other.id == self._id
-        elif isinstance(other, int):
+        elif isinstance(other, str):
             return other == self._id
         else:
             raise NoPossibleConversionException(f"Cannot compare type <{type(Tag)}> to <{type(other)}>")
