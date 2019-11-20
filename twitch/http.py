@@ -31,6 +31,7 @@ class HTTPConnection:
 
     async def get_user(self, user):
         if isinstance(user, str) and not user.isdigit():
+            print(user)
             return await self.request('GET', f'/users?login={user}')
         elif isinstance(user, int) or user.isdigit():
             return await self.request('GET', f'/users?id={user}')
@@ -43,16 +44,17 @@ class HTTPConnection:
         elif isinstance(users[0], int) or users[0].isdigit():
             params += f'?id={users[0]}'
 
-        for u in users[0]:
+        for u in users:
             # Skip over first user as its already provided in params
-            if users[0].index(u) == 0:
+            if users.index(u) == 0:
                 continue
 
             if isinstance(u, str) and not u.isdigit():
                 params += f'&login={u}'
-            elif isinstance(g, int) or u.isdigit():
+            elif isinstance(u, int) or u.isdigit():
                 params += f'&id={u}'
 
+        print(params, await self.request('GET', f'/users{params}'))
         return await self.request('GET', f'/users{params}')
 
     async def get_game(self, game):
@@ -61,17 +63,17 @@ class HTTPConnection:
         elif isinstance(game, int) or game.isdigit():
             return await self.request('GET', f'/games?id={game}')
 
-    async def get_games(self, *games):
+    async def get_games(self, games):
         params = ''
 
-        if isinstance(games[0][0], str) and not games[0][0].isdigit():
-            params += f'?name={games[0][0]}'
-        elif isinstance(games[0][0], int) or games[0][0].isdigit():
-            params += f'?id={games[0][0]}'
+        if isinstance(games[0], str) and not games[0].isdigit():
+            params += f'?name={games[0]}'
+        elif isinstance(games[0], int) or games[0].isdigit():
+            params += f'?id={games[0]}'
 
-        for g in games[0]:
+        for g in games:
             # Skip over first game as its already provided in params
-            if games[0].index(g) == 0:
+            if games.index(g) == 0:
                 continue
 
             if isinstance(g, str) and not g.isdigit():
