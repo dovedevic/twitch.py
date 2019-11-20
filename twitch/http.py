@@ -53,7 +53,6 @@ class HTTPConnection:
             elif isinstance(u, int) or u.isdigit():
                 params += f'&id={u}'
 
-        print(params, await self.request('GET', f'/users{params}'))
         return await self.request('GET', f'/users{params}')
 
     async def get_game(self, game):
