@@ -1,4 +1,3 @@
-from datetime import datetime
 from .errors import APIMissMatchException, NotAuthorizedException, NoPossibleConversionException
 from .channel import WhisperChannel
 from .genericutils import get_datetime_from
