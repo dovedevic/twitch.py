@@ -41,8 +41,6 @@ class ModerationEvent:
     def __eq__(self, other):
         if isinstance(other, ModerationEvent):
             return other.id == self._id
-        elif isinstance(other, int):
-            return other == self._id
         elif isinstance(other, str):
             return other == self._id
         else:
