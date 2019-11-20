@@ -4,6 +4,7 @@ import logging
 import websocket
 
 from .errors import TwitchException
+from .user import User, PartialUser, BannedPartialUser
 
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,19 @@ class HTTPConnection:
                 params += f'&id={g}'
 
         return await self.request('GET', f'/games{params}')
+
+    async def get_stream(self, user):
+        if isinstance(user, (User, PartialUser, BannedPartialUser)):
+            return await self.request('GET', f'/streams/?user_id={user.id}')
+
+        if isinstance(user, str) and not user.isdigit():
+            return await self.request('GET', f'/streams/?user_login={user}')
+        elif isinstance(user, int) or user.isdigit():
+            return await self.request('GET', f'/streams/?user_id={user}')
+
+    async def get_streams(self, users, games, lang, limit):
+        # TODO
+        pass
 
     async def get_stream_tags(self, tags, limit):
         # TODO
