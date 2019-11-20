@@ -4,6 +4,7 @@ import logging
 import websocket
 
 from .errors import TwitchException
+from .game import Game, PartialGame
 from .stream import Stream
 from .user import User, PartialUser, BannedPartialUser
 
@@ -97,8 +98,40 @@ class HTTPConnection:
             return await self.request('GET', f'/streams/?user_id={user}')
 
     async def get_streams(self, users, games, lang, limit):
-        # TODO
-        pass
+        # TODO: Cleanup
+        params = f'?first={limit}&language={lang}'
+
+        if users:
+            if type(users) in (tuple, list):
+                for user in users:
+                    if isinstance(user, (User, PartialUser, BannedPartialUser)):
+                        params += f'&user_id={user.id}'
+                    elif isinstance(user, str) and not user.isdigit():
+                        params += f'&user_login={user}'
+                    elif isinstance(user, int) or user.isdigit():
+                        params += f'&user_id={user}'
+            else:
+                if isinstance(users, (User, PartialUser, BannedPartialUser)):
+                    params += f'&user_id={users.id}'
+                elif isinstance(users, str) and not users.isdigit():
+                    params += f'&user_login={users}'
+                elif isinstance(users, int) or users.isdigit():
+                    params += f'&user_id={users}'
+
+        if games:
+            if type(games) in (tuple, list):
+                for game in games:
+                    if isinstance(game, (Game, PartialGame)):
+                        params += f'&game_id={game.id}'
+                    else:
+                        params += f'&game_id={game}'
+            else:
+                if isinstance(games, (Game, PartialGame)):
+                    params += f'&game_id={games.id}'
+                else:
+                    params += f'&game_id={games}'
+
+        return await self.request('GET', f'/streams{params}')
 
     async def get_stream_tags(self, tags, limit):
         # TODO

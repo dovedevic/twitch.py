@@ -144,8 +144,20 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-streams
     async def get_streams(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None, games: typing.Union[int, str, Game, PartialGame] = None, language: str = 'en', limit: int = 20):
-        # TODO
-        pass
+        if users and len(users) > 100:
+            raise TwitchException('User amount cannot exceed 100')
+
+        if games and len(games) > 100:
+            raise TwitchException('Game amount cannot exceed 100')
+
+        data = await self.http.get_streams(users, games, language, limit)
+
+        ret = []
+
+        for s in data['data']:
+            ret.append(Stream(self, s))
+
+        return ret
 
     # https://dev.twitch.tv/docs/api/reference#get-streams-metadata
     async def get_streams_metadata(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None, games: typing.Union[int, str, Game, PartialGame] = None, language: str = 'en', limit: int = 20):
