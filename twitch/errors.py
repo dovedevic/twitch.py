@@ -33,3 +33,12 @@ class NoPossibleConversionException(TwitchException):
     If thrown, the user probably did something dumb
     """
     pass
+
+
+class LocaleNotFoundException(TwitchException):
+    """
+    Exception thrown when a locale is requested for a tag or game but there does not exist one in the language
+
+    If thrown, the user should pick a different locale
+    """
+    pass
