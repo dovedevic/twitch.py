@@ -17,12 +17,15 @@ from .tags import Tag, PartialTag
 
 
 class Twitch:
-    def __init__(self, client_id, client_secret, *, loop=None, capabilities: typing.List[Scope] = None):
+    def __init__(self, client_id, client_secret, *, loop=None, capabilities: list = None):
+        self.coros = []
         self.loop = loop or asyncio.get_event_loop()
-        self.http = HTTPConnection(client_id, loop=self.loop)
+        self._access_token = None
         self._client_id = client_id
         self._client_secret = client_secret
         self._capabilities = capabilities or []
+        self._refresh_token = None
+        self.http = HTTPConnection(client_id, self._capabilities, loop=self.loop)
 
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
 
@@ -30,6 +33,9 @@ class Twitch:
     def run_coro(self, coro):
         return self.loop.run_until_complete(coro)
 
+    def run_coro_on_start(self, coro):
+        self.coros.append(coro)
+    
     # https://dev.twitch.tv/docs/api/reference#get-extension-analytics
     async def get_extension_analytics_url(self, extension: typing.Union[str, Extension]=None, limit: int=20, started_at: datetime=None, ended_at: datetime=None, analytics_type: str=None):
         # TODO
@@ -92,7 +98,7 @@ class Twitch:
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_game(self, game: typing.Union[int, str, Game, PartialGame]):
         data = await self.http.get_game(game)
-        return Game(data[data][0])
+        return Game(data['data'][0])
 
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_games(self, *games: typing.Union[int, str, Game, PartialGame]):
@@ -270,3 +276,6 @@ class Twitch:
 
         if not self.loop.is_closed():
             self.loop.close()
+
+    def is_closed(self):
+        return self.loop.is_closed()
