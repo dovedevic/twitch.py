@@ -1,6 +1,7 @@
 from datetime import datetime
 from .errors import APIMissMatchException, NotAuthorizedException, NoPossibleConversionException
 from .channel import WhisperChannel
+from .genericutils import get_datetime_from
 
 
 class TwitchBroadcasterType:
@@ -63,6 +64,8 @@ class PartialUser:
         if isinstance(other, PartialUser) or isinstance(other, User):
             return other.id == self._id
         elif isinstance(other, int):
+            return other == int(self._id)
+        elif isinstance(other, str):
             return other == self._id
         else:
             raise NoPossibleConversionException(f"Cannot compare type <{type(PartialUser)}> to <{type(other)}>")
@@ -91,7 +94,7 @@ class BannedPartialUser(PartialUser):
 
     def __init__(self, _id, _username, _expire_time):
         PartialUser.__init__(self, _id, _username)
-        self._expire_time = datetime.strptime(_expire_time, '%Y-%m-%dT%H:%M:%SZ')
+        self._expire_time = get_datetime_from(_expire_time)
 
     def __repr__(self):
         return f"<BannedPartialUser - id:{self._id} username:{self._username} exp_at:{self._expire_time}>"
