@@ -99,10 +99,8 @@ class HTTPConnection:
 
 
 class WSConnection(HTTPConnection):
-    def __init__(self, client_id, capabilities: list, *, loop=None):
-        super().__init__(client_id, [], loop=loop)
-        # TODO: Create IRC capability object
-        self._capabilities = capabilities
+    def __init__(self, client_id, scopes, *, loop=None):
+        super().__init__(client_id, scopes, loop=loop)
 
     async def irc_connect(self, channel, nick, oauth):
         async with aiohttp.ClientSession() as session:
@@ -116,12 +114,11 @@ class WSConnection(HTTPConnection):
                 await ws.send_str(f'NICK {nick}')
                 await ws.send_str(f'JOIN #{channel}')
 
-                # TODO: Replace with irc capabilities sending "CAP REQ :<cap>"
                 # required to send messages
                 await ws.send_str('CAP REQ :twitch.tv/membership')
-                # required to get full user info and use commands
+                # required to get full user info and use commands w/ tags
                 await ws.send_str(f'CAP REQ :twitch.tv/tags twitch.tv/commands')
 
-                while True:
-                    res = await ws.receive()
+                while not self.loop.is_closed():
+                    res = (await ws.receive()).data.strip()
                     print(res)

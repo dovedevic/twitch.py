@@ -248,7 +248,9 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-videos
     async def get_videos(self, *for_object: typing.Union[int, str, Video, User, PartialUser, BannedPartialUser, Game, PartialGame]):
-        # TODO
+        if len(for_object) > 100:
+            raise TwitchException('Length of objects cannot be greater than 100')
+
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-videos
