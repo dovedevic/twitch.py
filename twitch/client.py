@@ -1,4 +1,5 @@
 import asyncio
+import signal
 import typing
 
 from .game import Game
@@ -15,6 +16,8 @@ class Twitch:
         self._client_id = client_id
         self._client_secret = client_secret
         self._capabilities = capabilities or []
+
+        self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
 
     async def get_user(self, user: typing.Union[int, str]):
         data = await self.http.get_user(user)
@@ -53,3 +56,9 @@ class Twitch:
     async def close(self):
         if self.http is not None:
             await self.http.close()
+
+        if self.loop.is_running():
+            self.loop.stop()
+
+        if not self.loop.is_closed():
+            self.loop.close()
