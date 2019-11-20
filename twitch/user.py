@@ -248,4 +248,6 @@ class User(WhisperChannel):
         # TODO:: Insert client integration here. something like return await client.get_videos(self)
         pass
 
-
+    async def get_webhooks(self):
+        # TODO:: Insert client integration here. something like return await client.get_webhooks(self)
+        pass
