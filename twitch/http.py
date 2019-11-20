@@ -95,8 +95,3 @@ class HTTPConnection:
                 params += f'&id={g}'
 
         return await self.request('GET', f'/games{params}')
-
-    async def get_subscription(self, broadcaster_id, user):
-        return await self.request('GET',
-                                  f'/subscriptions?broadcaster_id={broadcaster_id}' +
-                                  (f'&user_id={user}' if user else ''))

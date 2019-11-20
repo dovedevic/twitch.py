@@ -64,20 +64,6 @@ class Twitch:
 
         return ret
 
-    async def get_subscription(self, broadcaster_id: int, user: int = None):
-        if Scope.Channel.Subscriptions.read() not in self._capabilities:
-            raise TwitchException('Scope.Channel.Subscriptions is needed to view channel subscriptions')
-
-        data = await self.http.get_subscription(broadcaster_id, user)
-        # TODO: Remove this debug print when done
-        print(data)
-        return Subscription(data['data'][0])
-
-    async def get_subscriptions(self, broadcaster_id: int, users: typing.List[int] = None):
-        # TODO: Setup this
-        if Scope.Channel.Subscriptions.read() not in self._capabilities:
-            raise TwitchException('Scope.Channel.Subscriptions is needed to view channel subscriptions')
-
     def start(self):
         self.loop.create_task(self._start())
         self.loop.run_forever()
