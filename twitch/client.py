@@ -7,7 +7,6 @@ from .game import Game, PartialGame
 from .extension import Extension
 from .http import HTTPConnection
 from .errors import TwitchException
-from .scope import Scope
 from .user import User, PartialUser, BannedPartialUser
 from .stream import Stream
 from .video import Video
@@ -28,13 +27,6 @@ class Twitch:
         self.http = HTTPConnection(client_id, self._capabilities, loop=self.loop)
 
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
-
-    # Temporary solution until actual coroutine running is setup
-    def run_coro(self, coro):
-        return self.loop.run_until_complete(coro)
-
-    def run_coro_on_start(self, coro):
-        self.coros.append(coro)
     
     # https://dev.twitch.tv/docs/api/reference#get-extension-analytics
     async def get_extension_analytics_url(self, extension: typing.Union[str, Extension]=None, limit: int=20, started_at: datetime=None, ended_at: datetime=None, analytics_type: str=None):
@@ -266,6 +258,13 @@ class Twitch:
     async def get_webhooks(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser], limit: int=20):
         # TODO
         pass
+
+    # Temporary solution until actual coroutine running is setup
+    def run_coro(self, coro):
+        return self.loop.run_until_complete(coro)
+
+    def run_coro_on_start(self, coro):
+        self.coros.append(coro)
 
     async def close(self):
         if self.http is not None:
