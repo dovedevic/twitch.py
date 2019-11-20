@@ -108,9 +108,10 @@ class User(WhisperChannel):
     Defines a twitch user
     """
 
-    __slots__ = ('_broadcaster_type', '_description', '_displayname', '_email', '_id', '_username', '_offline_image_url', '_profile_image_url', '_user_type', '_view_count')
+    __slots__ = ('_client', '_broadcaster_type', '_description', '_displayname', '_email', '_id', '_username', '_offline_image_url', '_profile_image_url', '_user_type', '_view_count')
 
-    def __init__(self, data):
+    def __init__(self, client, data):
+        self._client = client
         self._broadcaster_type = TwitchBroadcasterType.ensure_type(data['broadcaster_type'])
         self._user_type = TwitchUserType.ensure_type(data['type'])
         self._description = data['description']

@@ -10,9 +10,10 @@ class Stream(ChatChannel):
     """
     Defines a twitch stream
     """
-    __slots__ = ('_id', '_broadcaster', '_game', '_is_live', '_title', '_viewer_count', '_started_at', '_language', '_format_thumbnail_url', '_tags')
+    __slots__ = ('_client', '_id', '_broadcaster', '_game', '_is_live', '_title', '_viewer_count', '_started_at', '_language', '_format_thumbnail_url', '_tags')
 
-    def __init__(self, data):
+    def __init__(self, client, data):
+        self._client = client
         self._id = data['id']
         self._broadcaster = PartialUser(data['user_id'], data['user_name'])
         self._game = PartialGame(data['game_id'])
