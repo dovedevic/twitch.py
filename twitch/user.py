@@ -1,3 +1,4 @@
+from datetime import datetime
 from .errors import APIMissMatchException, NotAuthorizedException, NoPossibleConversionException
 from .channel import WhisperChannel
 
@@ -76,6 +77,28 @@ class PartialUser:
     @property
     def username(self):
         return self._username
+
+    async def fetch_user(self):
+        # TODO:: return await core.get_user(self._id)
+        pass
+
+
+class BannedPartialUser(PartialUser):
+    """
+    Defines a banned partial twitch user
+    """
+    __slots__ = '_expire_time'
+
+    def __init__(self, _id, _username, _expire_time):
+        PartialUser.__init__(self, _id, _username)
+        self._expire_time = datetime.strptime(_expire_time, '%Y-%m-%dT%H:%M:%SZ')
+
+    def __repr__(self):
+        return f"<BannedPartialUser - id:{self._id} username:{self._username} exp_at:{self._expire_time}>"
+
+    @property
+    def ban_expires_at(self):
+        return self._expire_time
 
     async def fetch_user(self):
         # TODO:: return await core.get_user(self._id)
