@@ -30,7 +30,53 @@ class HTTPConnection:
             await self._session.close()
 
     async def get_user(self, user):
-        if isinstance(user, str):
+        if isinstance(user, str) and not user.isdigit():
             return await self.request('GET', f'/users?login={user}')
-        elif isinstance(user, int):
+        elif isinstance(user, int) or user.isdigit():
             return await self.request('GET', f'/users?id={user}')
+
+    async def get_users(self, users):
+        params = ''
+
+        if isinstance(users[0], str) and not users[0].isdigit():
+            params += f'?login={users[0]}'
+        elif isinstance(users[0], int) or users[0].isdigit():
+            params += f'?id={users[0]}'
+
+        for u in users[0]:
+            # Skip over first user as its already provided in params
+            if users[0].index(u) == 0:
+                continue
+
+            if isinstance(u, str) and not u.isdigit():
+                params += f'&login={u}'
+            elif isinstance(g, int) or u.isdigit():
+                params += f'&id={u}'
+
+        return await self.request('GET', f'/users{params}')
+
+    async def get_game(self, game):
+        if isinstance(game, str) and not game.isdigit():
+            return await self.request('GET', f'/games?name={game}')
+        elif isinstance(game, int) or game.isdigit():
+            return await self.request('GET', f'/games?id={game}')
+
+    async def get_games(self, *games):
+        params = ''
+
+        if isinstance(games[0][0], str) and not games[0][0].isdigit():
+            params += f'?name={games[0][0]}'
+        elif isinstance(games[0][0], int) or games[0][0].isdigit():
+            params += f'?id={games[0][0]}'
+
+        for g in games[0]:
+            # Skip over first game as its already provided in params
+            if games[0].index(g) == 0:
+                continue
+
+            if isinstance(g, str) and not g.isdigit():
+                params += f'&name={g}'
+            elif isinstance(g, int) or g.isdigit():
+                params += f'&id={g}'
+
+        return await self.request('GET', f'/games{params}')
