@@ -219,3 +219,11 @@ class User(WhisperChannel):
     async def update_extensions(self, extensions):
         # TODO:: Insert client integration here. something like return await client.update_user_extensions(self, extensions)
         pass
+
+    async def get_followers(self):
+        # TODO:: Insert client integration here. something like return await client.get_followers(self)
+        pass
+
+    async def get_followering(self):
+        # TODO:: Insert client integration here. something like return await client.get_followering(self)
+        pass
