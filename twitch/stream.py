@@ -171,3 +171,7 @@ class Stream(ChatChannel):
         rep_tags = None
         self._tags = rep_tags
         return tags
+
+    async def get_videos(self):
+        streamer = await self.fetch_streamer()
+        return streamer.get_videos()

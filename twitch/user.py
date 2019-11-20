@@ -240,4 +240,12 @@ class User(WhisperChannel):
         # TODO:: Insert client integration here. something like return await client.get_subscribers(self)
         pass
 
+    async def get_stream(self):
+        # TODO:: Insert client integration here. something like return await client.get_stream(self)
+        pass
+
+    async def get_videos(self):
+        # TODO:: Insert client integration here. something like return await client.get_videos(self)
+        pass
+
 
