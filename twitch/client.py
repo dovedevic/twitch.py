@@ -139,7 +139,8 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-streams
     async def get_stream(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser]):
-        return await self.http.get_stream(user)
+        data = await self.http.get_stream(user)
+        return Stream(self, data['data'][0])
 
     # https://dev.twitch.tv/docs/api/reference#get-streams
     async def get_streams(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None, games: typing.Union[int, str, Game, PartialGame] = None, language: str = 'en', limit: int = 20):

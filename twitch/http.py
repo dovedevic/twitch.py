@@ -4,6 +4,7 @@ import logging
 import websocket
 
 from .errors import TwitchException
+from .stream import Stream
 from .user import User, PartialUser, BannedPartialUser
 
 
