@@ -20,6 +20,8 @@ class PartialGame:
         if isinstance(other, PartialGame) or isinstance(other, Game):
             return other.id == self._id
         elif isinstance(other, int):
+            return other == int(self._id)
+        elif isinstance(other, str):
             return other == self._id
         else:
             raise NoPossibleConversionException(f"Cannot compare type <{type(PartialGame)}> to <{type(other)}>")
@@ -52,6 +54,8 @@ class Game:
         if isinstance(other, Game):
             return other.id == self._id
         elif isinstance(other, int):
+            return other == int(self._id)
+        elif isinstance(other, str):
             return other == self._id
         else:
             raise NoPossibleConversionException(f"Cannot compare type <{type(Game)}> to <{type(other)}>")
