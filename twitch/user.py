@@ -103,10 +103,6 @@ class BannedPartialUser(PartialUser):
     def ban_expires_at(self):
         return self._expire_time
 
-    async def fetch_user(self):
-        # TODO:: return await core.get_user(self._id)
-        pass
-
 
 class User(WhisperChannel):
     """
