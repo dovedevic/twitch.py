@@ -204,3 +204,19 @@ class User(WhisperChannel):
     @property
     def is_global_moderator(self):
         return self._user_type == TwitchUserType.GlobalMod
+
+    async def update_description(self, description):
+        # TODO:: Insert client integration here. something like return await client.update_user_description(self, description)
+        pass
+
+    async def get_extensions(self):
+        # TODO:: Insert client integration here. something like return await client.get_extensions(self)
+        pass
+
+    async def get_active_extensions(self):
+        # TODO:: Insert client integration here. something like return await client.get_active_extensions(self)
+        pass
+
+    async def update_extensions(self, extensions):
+        # TODO:: Insert client integration here. something like return await client.update_user_extensions(self, extensions)
+        pass
