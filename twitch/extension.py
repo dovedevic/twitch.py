@@ -27,7 +27,7 @@ class Extension:
     Defines a twitch extension
     """
 
-    __slots__ = ('_id', '_version', '_name', '_activatable', '_type')
+    __slots__ = ('_id', '_version', '_name', '_activatable', '_type', '_position')
 
     def __init__(self, data):
         self._id = data['id']
@@ -37,6 +37,7 @@ class Extension:
         self._type = []
         for etype in data['type']:
             self._type.append(ExtensionType.ensure_type(etype))
+        self._position = (data['x'], data['y']) if 'x' in data and 'y' in data else None
 
     def __eq__(self, other):
         if isinstance(other, Extension):
@@ -90,3 +91,6 @@ class Extension:
     @property
     def is_overlay(self):
         return ExtensionType.Overlay in self._type
+
+    def position(self):
+        return self._position
