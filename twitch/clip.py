@@ -2,6 +2,7 @@ from datetime import datetime
 from .errors import NoPossibleConversionException, NotAuthorizedException
 from .user import PartialUser
 from .game import PartialGame
+from .genericutils import get_datetime_from
 
 
 class Clip:
@@ -13,7 +14,7 @@ class Clip:
 
     def __init__(self, data):
         self._id = data['id']
-        self._timestamp = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+        self._timestamp = get_datetime_from(data['created_at'])
         self._broadcaster = PartialUser(data['broadcaster_id'], data['broadcaster_name'])
         self._creator = PartialUser(data['creator_id'], data['creator_name'])
         self._video_id = data['video_id']
@@ -30,6 +31,8 @@ class Clip:
         if isinstance(other, Clip):
             return other.id == self._id
         elif isinstance(other, int):
+            return other == self._id
+        elif isinstance(other, str):
             return other == self._id
         else:
             raise NoPossibleConversionException(f"Cannot compare type <{type(Clip)}> to <{type(other)}>")
