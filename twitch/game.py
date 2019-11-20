@@ -51,7 +51,7 @@ class Game:
         self._box_art_url = data['box_art_url']
 
     def __eq__(self, other):
-        if isinstance(other, Game):
+        if isinstance(other, Game) or isinstance(other, PartialGame):
             return other.id == self._id
         elif isinstance(other, int):
             return other == int(self._id)
