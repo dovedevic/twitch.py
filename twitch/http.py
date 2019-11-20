@@ -85,6 +85,10 @@ class HTTPConnection:
 
         return await self.request('GET', f'/games{params}')
 
+    async def get_stream_tags(self, tags, limit):
+        # TODO
+        pass
+
 
 class WSConnection(HTTPConnection):
     def __init__(self, client_id, scopes, *, loop=None):

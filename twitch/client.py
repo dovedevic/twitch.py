@@ -3,16 +3,16 @@ import signal
 import typing
 
 from datetime import datetime
-from .game import Game, PartialGame
-from .extension import Extension
-from .http import HTTPConnection, WSConnection
-from .errors import TwitchException
-from .user import User, PartialUser, BannedPartialUser
-from .stream import Stream
-from .video import Video
-from .transaction import Transaction
 from .clip import Clip
+from .errors import TwitchException
+from .extension import Extension
+from .game import Game, PartialGame
+from .http import HTTPConnection, WSConnection
+from .stream import Stream
 from .tags import Tag, PartialTag
+from .transaction import Transaction
+from .video import Video
+from .user import User, PartialUser, BannedPartialUser
 
 
 class Twitch:
@@ -84,12 +84,13 @@ class Twitch:
         return await self.redeem_entitlement_codes(user, code)
 
     # https://dev.twitch.tv/docs/api/reference#get-top-games
-    async def get_top_games(self, limit: int=20):
+    async def get_top_games(self, limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_game(self, game: typing.Union[int, str, Game, PartialGame]):
+        # Alias
         return await self.get_games(game)
 
     # https://dev.twitch.tv/docs/api/reference#get-games
