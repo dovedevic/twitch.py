@@ -2,6 +2,8 @@ import aiohttp
 import asyncio
 import logging
 
+from .errors import TwitchException
+
 
 logger = logging.getLogger(__name__)
 
@@ -9,13 +11,26 @@ logger = logging.getLogger(__name__)
 class HTTPConnection:
     BASE = 'https://api.twitch.tv/helix'
 
-    def __init__(self, client_id, *, loop=None):
+    def __init__(self, client_id, scopes, *, loop=None):
         self.loop = loop or asyncio.get_event_loop()
         self._client_id = client_id
+        self._scopes = scopes
         self._session = aiohttp.ClientSession(loop=loop)
+
+    async def rrequest(self, method, url, **kwargs):
+        res = await self._session.request(method, url, **kwargs)
+
+        if res.status != 200:
+            logger.warning(f'RRequest returned status {res.status} with reason: {res.reason}')
+
+        try:
+            return await res.json()
+        except:
+            return await res.text()
 
     async def request(self, method, url, **kwargs):
         headers = kwargs.pop('headers', {})
+
         headers['Client-ID'] = self._client_id
 
         res = await self._session.request(method, f'{self.BASE}{url}', headers=headers)
@@ -80,3 +95,8 @@ class HTTPConnection:
                 params += f'&id={g}'
 
         return await self.request('GET', f'/games{params}')
+
+    async def get_subscription(self, broadcaster_id, user):
+        return await self.request('GET',
+                                  f'/subscriptions?broadcaster_id={broadcaster_id}' +
+                                  (f'&user_id={user}' if user else ''))
