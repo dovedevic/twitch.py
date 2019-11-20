@@ -30,32 +30,32 @@ class Twitch:
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
     
     # https://dev.twitch.tv/docs/api/reference#get-extension-analytics
-    async def get_extension_analytics_url(self, extension: typing.Union[str, Extension]=None, limit: int=20, started_at: datetime=None, ended_at: datetime=None, analytics_type: str=None):
+    async def get_extension_analytics_url(self, extension: typing.Union[str, Extension] = None, limit: int = 20, started_at: datetime = None, ended_at: datetime = None, analytics_type: str = None):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-game-analytics
-    async def get_game_analytics_url(self, game: typing.Union[int, str, Game, PartialGame]=None, limit: int=20, started_at: datetime=None, ended_at: datetime=None, analytics_type: str=None):
+    async def get_game_analytics_url(self, game: typing.Union[int, str, Game, PartialGame] = None, limit: int = 20, started_at: datetime = None, ended_at: datetime = None, analytics_type: str = None):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-bits-leaderboard
-    async def get_bits_leaderboard(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int=10, started_at: datetime=None, period: str='all'):
+    async def get_bits_leaderboard(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int = 10, started_at: datetime = None, period: str = 'all'):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-extension-transactions
-    async def get_extension_transactions(self, extension: typing.Union[str, Extension], transaction: typing.Union[str, Transaction]=None, limit: int=20):
+    async def get_extension_transactions(self, extension: typing.Union[str, Extension], transaction: typing.Union[str, Transaction] = None, limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#create-clip
-    async def create_clip(self, stream: typing.Union[int, str, Stream], clip_after_delay: bool=False):
+    async def create_clip(self, stream: typing.Union[int, str, Stream], clip_after_delay: bool = False):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-clips
-    async def get_clips(self, stream: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], game: typing.Union[int, str, Game, PartialGame]=None, clip: typing.Union[str, Clip]=False):
+    async def get_clips(self, stream: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], game: typing.Union[int, str, Game, PartialGame] = None, clip: typing.Union[str, Clip] = False):
         # TODO
         pass
 
@@ -90,8 +90,7 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_game(self, game: typing.Union[int, str, Game, PartialGame]):
-        data = await self.http.get_game(game)
-        return Game(data['data'][0])
+        return await self.get_games(game)
 
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_games(self, *games: typing.Union[int, str, Game, PartialGame]):
@@ -118,22 +117,22 @@ class Twitch:
         return await self.are_messages_allowed(stream, message)
 
     # https://dev.twitch.tv/docs/api/reference#get-banned-events
-    async def get_banned_events(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser, BannedPartialUser]=None, limit: int=20):
+    async def get_banned_events(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None, limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-banned-users
-    async def get_banned_users(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser, BannedPartialUser]=None):
+    async def get_banned_users(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-moderators
-    async def get_moderators(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser]=None):
+    async def get_moderators(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser] = None):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-moderator-events
-    async def get_moderator_events(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser]=None):
+    async def get_moderator_events(self, stream: typing.Union[int, str, Stream], for_users: typing.Union[int, str, User, PartialUser] = None):
         # Alias
         return await self.get_banned_events(stream, for_users=for_users)
 
@@ -143,12 +142,12 @@ class Twitch:
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-streams
-    async def get_streams(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser]=None, games: typing.Union[int, str, Game, PartialGame]=None, language: str='en', limit: int=20):
+    async def get_streams(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None, games: typing.Union[int, str, Game, PartialGame] = None, language: str = 'en', limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-streams-metadata
-    async def get_streams_metadata(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser]=None, games: typing.Union[int, str, Game, PartialGame]=None, language: str='en', limit: int=20):
+    async def get_streams_metadata(self, users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None, games: typing.Union[int, str, Game, PartialGame] = None, language: str = 'en', limit: int = 20):
         # TODO Figure out API later
         pass
 
@@ -158,32 +157,32 @@ class Twitch:
         return await self.get_streams_metadata(user)
 
     # https://dev.twitch.tv/docs/api/reference#create-stream-marker
-    async def create_stream_marker(self, stream: typing.Union[int, str, Stream], description: str=None):
+    async def create_stream_marker(self, stream: typing.Union[int, str, Stream], description: str = None):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-stream-markers
-    async def get_stream_markers(self, from_type: typing.Union[Stream, Video], limit: int=20):
+    async def get_stream_markers(self, from_type: typing.Union[Stream, Video], limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-broadcaster-subscriptions
-    async def get_subscriptions(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], for_users: typing.Union[int, str, User, PartialUser, BannedPartialUser]=None):
+    async def get_subscriptions(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], for_users: typing.Union[int, str, User, PartialUser, BannedPartialUser] = None):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-all-stream-tags
-    async def get_all_stream_tags(self, limit: int=20):
+    async def get_all_stream_tags(self, limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-all-stream-tags
-    async def get_stream_tags(self, tags: typing.Union[str, Tag, PartialTag], limit: int=20):
+    async def get_stream_tags(self, tags: typing.Union[str, Tag, PartialTag], limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-all-stream-tags
-    async def get_stream_tag(self, tag: typing.Union[str, Tag, PartialTag], limit: int=20):
+    async def get_stream_tag(self, tag: typing.Union[str, Tag, PartialTag], limit: int = 20):
         # Alias
         return await self.get_stream_tags(tag, limit=limit)
 
@@ -199,8 +198,7 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-users
     async def get_user(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser]):
-        data = await self.http.get_user(user)
-        return User(self, data['data'][0])
+        return await self.get_users(user)
 
     # https://dev.twitch.tv/docs/api/reference#get-users
     async def get_users(self, *users: typing.Union[int, str, User, PartialUser, BannedPartialUser]):
@@ -217,12 +215,12 @@ class Twitch:
         return ret
 
     # https://dev.twitch.tv/docs/api/reference#get-users-follows
-    async def get_followers(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int=20):
+    async def get_followers(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int = 20):
         # TODO
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-users-follows
-    async def get_followings(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int=20):
+    async def get_followings(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int = 20):
         # TODO
         pass
 
@@ -248,6 +246,7 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-videos
     async def get_videos(self, *for_object: typing.Union[int, str, Video, User, PartialUser, BannedPartialUser, Game, PartialGame]):
+        # TODO
         if len(for_object) > 100:
             raise TwitchException('Length of objects cannot be greater than 100')
 
@@ -258,7 +257,7 @@ class Twitch:
         return await self.get_videos(video)
 
     # https://dev.twitch.tv/docs/api/reference#get-webhook-subscriptions
-    async def get_webhooks(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser], limit: int=20):
+    async def get_webhooks(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser], limit: int = 20):
         # TODO
         pass
 

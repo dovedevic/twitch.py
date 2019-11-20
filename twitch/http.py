@@ -45,12 +45,6 @@ class HTTPConnection:
         if self._session:
             await self._session.close()
 
-    async def get_user(self, user):
-        if isinstance(user, str) and not user.isdigit():
-            return await self.request('GET', f'/users?login={user}')
-        elif isinstance(user, int) or user.isdigit():
-            return await self.request('GET', f'/users?id={user}')
-
     async def get_users(self, users):
         params = ''
 
@@ -70,12 +64,6 @@ class HTTPConnection:
                 params += f'&id={u}'
 
         return await self.request('GET', f'/users{params}')
-
-    async def get_game(self, game):
-        if isinstance(game, str) and not game.isdigit():
-            return await self.request('GET', f'/games?name={game}')
-        elif isinstance(game, int) or game.isdigit():
-            return await self.request('GET', f'/games?id={game}')
 
     async def get_games(self, games):
         params = ''
