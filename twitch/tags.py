@@ -1,4 +1,3 @@
-from .user import PartialUser
 from .errors import NoPossibleConversionException, LocaleNotFoundException
 
 
