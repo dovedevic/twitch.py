@@ -1,4 +1,3 @@
-from datetime import datetime
 from .errors import NoPossibleConversionException, NotAuthorizedException
 from .user import PartialUser
 from .game import PartialGame
