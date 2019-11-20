@@ -31,7 +31,6 @@ class HTTPConnection:
 
     async def get_user(self, user):
         if isinstance(user, str) and not user.isdigit():
-            print(user)
             return await self.request('GET', f'/users?login={user}')
         elif isinstance(user, int) or user.isdigit():
             return await self.request('GET', f'/users?id={user}')
