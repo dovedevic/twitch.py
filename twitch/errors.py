@@ -42,3 +42,12 @@ class LocaleNotFoundException(TwitchException):
     If thrown, the user should pick a different locale
     """
     pass
+
+
+class InvalidOperationException(TwitchException):
+    """
+    Exception thrown when an operation is done that violates some assumption or notion
+
+    If thrown, the user should check assumptions prior to the call
+    """
+    pass
