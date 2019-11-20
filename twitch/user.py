@@ -224,6 +224,20 @@ class User(WhisperChannel):
         # TODO:: Insert client integration here. something like return await client.get_followers(self)
         pass
 
-    async def get_followering(self):
+    async def get_following(self):
         # TODO:: Insert client integration here. something like return await client.get_followering(self)
         pass
+
+    async def get_clips(self):
+        # TODO:: Insert client integration here. something like return await client.get_clips(self)
+        pass
+
+    async def get_markers(self):
+        # TODO:: Insert client integration here. something like return await client.get_markers(self)
+        pass
+
+    async def get_subscribers(self):
+        # TODO:: Insert client integration here. something like return await client.get_subscribers(self)
+        pass
+
+

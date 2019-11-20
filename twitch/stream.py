@@ -3,7 +3,7 @@ from .user import PartialUser, User
 from .game import PartialGame, Game
 from .tags import PartialTag, Tag
 from .genericutils import get_datetime_from
-from .errors import NoPossibleConversionException
+from .errors import NoPossibleConversionException, InvalidOperationException
 
 
 class Stream(ChatChannel):
@@ -130,3 +130,44 @@ class Stream(ChatChannel):
     async def get_following(self):
         streamer = await self.fetch_streamer()
         return streamer.get_following()
+
+    async def get_clips(self):
+        streamer = await self.fetch_streamer()
+        return streamer.get_clips()
+
+    async def create_clip(self):
+        streamer = await self.fetch_streamer()
+        await self.update_metadata()
+        if self.is_live:
+            # TODO:: return await client.create_clip(streamer)
+            pass
+        else:
+            raise InvalidOperationException("Cannot create a clip when the stream is offline")
+
+    async def get_bits_leaderboard(self, **kwargs):
+        streamer = await self.fetch_streamer()
+        # TODO:: return await client.get_bits_leaderboard(streamer, kwargs)
+        pass
+
+    async def create_marker(self):
+        streamer = await self.fetch_streamer()
+        await self.update_metadata()
+        if self.is_live:
+            # TODO:: return await client.create_marker(streamer)
+            pass
+        else:
+            raise InvalidOperationException("Cannot create a marker when the stream is offline")
+
+    async def get_markers(self):
+        streamer = await self.fetch_streamer()
+        return streamer.get_markers()
+
+    async def get_subscribers(self):
+        streamer = await self.fetch_streamer()
+        return streamer.get_subscribers()
+
+    async def replace_stream_tags(self, tags):
+        # TODO:: rep_tags =  await client.replace_tags(streamer, tags)
+        rep_tags = None
+        self._tags = rep_tags
+        return tags
