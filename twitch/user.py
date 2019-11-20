@@ -123,6 +123,25 @@ class User(WhisperChannel):
         self._offline_image_url = data['offline_image_url']
         self._view_count = data['view_count']
 
+    def __str__(self):
+        return self._username
+
+    def __repr__(self):
+        return f"<User - id:{self._id} username:{self._username}>"
+
+    def __eq__(self, other):
+        if isinstance(other, PartialUser) or isinstance(other, User):
+            return other.id == self._id
+        elif isinstance(other, int):
+            return other == int(self._id)
+        elif isinstance(other, str):
+            return other == self._id
+        else:
+            raise NoPossibleConversionException(f"Cannot compare type <{type(User)}> to <{type(other)}>")
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @property
     def id(self):
         return self._id
