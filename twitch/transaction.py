@@ -1,6 +1,7 @@
 from datetime import datetime
 from .errors import APIMissMatchException, NoPossibleConversionException
 from .user import PartialUser
+from .genericutils import get_datetime_from
 
 
 class TwitchProductType:
@@ -42,7 +43,7 @@ class Transaction:
 
     def __init__(self, data):
         self._id = data['id']
-        self._timestamp = datetime.strptime(data['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        self._timestamp = get_datetime_from(data['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')
         self._to_user = PartialUser(data['broadcaster_id'], data['broadcaster_name'])
         self._from_user = PartialUser(data['user_id'], data['user_name'])
         self._product_type = TwitchProductType.ensure_type(data['product_type'])
@@ -55,7 +56,7 @@ class Transaction:
     def __eq__(self, other):
         if isinstance(other, Transaction):
             return other.id == self._id
-        elif isinstance(other, int):
+        elif isinstance(other, str):
             return other == self._id
         else:
             raise NoPossibleConversionException(f"Cannot compare type <{type(Transaction)}> to <{type(other)}>")
