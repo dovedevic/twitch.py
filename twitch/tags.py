@@ -1,6 +1,42 @@
 from .errors import NoPossibleConversionException, LocaleNotFoundException
 
 
+class PartialTag:
+    """
+    Defines a partial twitch stream tag
+    """
+
+    __slots__ = ('_id')
+
+    def __init__(self, tag_id):
+        self._id = tag_id
+
+    def __eq__(self, other):
+        if isinstance(other, PartialTag) or isinstance(other, Tag):
+            return other.id == self._id
+        elif isinstance(other, str):
+            return other == self._id
+        else:
+            raise NoPossibleConversionException(f"Cannot compare type <{type(PartialTag)}> to <{type(other)}>")
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __repr__(self):
+        return f"<PartialTag - id:{self._id}>"
+
+    def __str__(self):
+        return f"PartialTag:{self._id}"
+
+    @property
+    def id(self):
+        return self._id
+
+    async def fetch_tag(self):
+        # TODO:: return await core.get_tag(self._id)
+        pass
+
+
 class Tag:
     """
     Defines a twitch stream tag
@@ -15,7 +51,7 @@ class Tag:
         self._localization_descriptions = data['localization_descriptions']
 
     def __eq__(self, other):
-        if isinstance(other, Tag):
+        if isinstance(other, Tag) or isinstance(other, PartialTag):
             return other.id == self._id
         elif isinstance(other, str):
             return other == self._id
