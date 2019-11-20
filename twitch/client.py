@@ -1,6 +1,7 @@
 import asyncio
 import typing
 
+from .game import Game
 from .http import HTTPConnection
 from .errors import TwitchException
 from .scope import Scope
@@ -23,11 +24,29 @@ class Twitch:
         if len(users) > 100:
             raise TwitchException('User amount cannot be greater than 100')
 
+        data = await self.http.get_users(users)
+
         ret = []
 
-        for user in users:
-            data = await self.http.get_user(user)
-            ret.append(User(data['data'][0]))
+        for i in range(len(data['data'])):
+            ret.append(User(data['data'][i]))
+
+        return ret
+
+    async def get_game(self, game: typing.Union[int, str]):
+        data = await self.http.get_game(game)
+        return Game(data[data][0])
+
+    async def get_games(self, *games: typing.Union[int, str]):
+        if len(games) > 100:
+            raise TwitchException('Game amount cannot be greater than 100')
+
+        data = await self.http.get_games(games)
+
+        ret = []
+
+        for i in range(len(data['data'])):
+            ret.append(Game(data['data'][i]))
 
         return ret
 
