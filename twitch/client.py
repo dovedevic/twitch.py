@@ -19,6 +19,10 @@ class Twitch:
 
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
 
+    # Temporary solution until actual coroutine running is setup
+    def run_coro(self, coro):
+        return self.loop.run_until_complete(coro)
+
     async def get_user(self, user: typing.Union[int, str]):
         data = await self.http.get_user(user)
         return User(data['data'][0])
