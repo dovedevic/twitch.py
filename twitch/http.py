@@ -165,8 +165,14 @@ class HTTPConnection:
             raise TwitchException('Client method \'start\' was never called')
 
         if isinstance(extension, Extension):
+            if extension.id != self._client_id:
+                raise TwitchException('Extension ID is not the same as the client ID')
+
             params += f'?extension_id={extension.id}'
-        elif isinstance(extension, (int, str)):
+        elif isinstance(extension, str):
+            if extension != self._client_id:
+                raise TwitchException('Extension ID is not the same as the client ID')
+
             params += f'?extension_id={extension}'
 
         if isinstance(transaction, list):
