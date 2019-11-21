@@ -229,13 +229,26 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-users-follows
     async def get_followers(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int = 20):
-        # TODO
-        pass
+        # TODO: Deal with total, data
+        data = await self.http.get_follows(to=user, limit=limit)
+
+        ret = []
+
+        for user in data['data']:
+            ret.append(PartialUser(self, user))
+
+        return ret
 
     # https://dev.twitch.tv/docs/api/reference#get-users-follows
     async def get_followings(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int = 20):
-        # TODO
-        pass
+        data = await self.http.get_follows(_from=user, limit=limit)
+
+        ret = []
+
+        for user in data:
+            ret.append(PartialUser(self, user))
+
+        return ret
 
     # https://dev.twitch.tv/docs/api/reference#update-user
     async def update_description(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser], description: str):

@@ -97,9 +97,15 @@ class HTTPConnection:
         elif isinstance(user, int) or user.isdigit():
             return await self.request('GET', f'/streams/?user_id={user}')
 
-    async def get_streams(self, users, games, lang, limit):
+    async def get_streams(self, users, games, langs, limit):
         # TODO: Cleanup
-        params = f'?first={limit}&language={lang}'
+        params = f'?first={limit}'
+
+        if type(langs) in (tuple, list):
+            for lang in langs:
+                params += f'&language={lang}'
+        else:
+            params += f'&language={langs}'
 
         if users:
             if type(users) in (tuple, list):
@@ -136,6 +142,19 @@ class HTTPConnection:
     async def get_stream_tags(self, tags, limit):
         # TODO
         pass
+
+    async def get_follows(self, *, to=None, _from=None, limit):
+        if to:
+            if isinstance(to, (User, PartialUser, BannedPartialUser)):
+                return await self.request('GET', f'/users/follows?first={limit}&to_id={to.id}')
+            elif isinstance(to, int) or to.isdigit():
+                return await self.request('GET', f'/users/follows?first={limit}&to_id={to}')
+
+        if _from:
+            if isinstance(_from, (User, PartialUser, BannedPartialUser)):
+                return await self.request('GET', f'/users/follows?first={limit}&from_id={_from.id}')
+            elif isinstance(_from, int) or to.isdigit():
+                return await self.request('GET', f'/users/follows?first={limit}&from_id={_from}')
 
 
 class WSConnection(HTTPConnection):
