@@ -4,8 +4,10 @@ import logging
 import websocket
 
 from .errors import TwitchException
+from .extension import Extension
 from .game import Game, PartialGame
 from .stream import Stream
+from .transaction import Transaction
 from .user import User, PartialUser, BannedPartialUser
 
 
@@ -15,7 +17,8 @@ logger = logging.getLogger(__name__)
 class HTTPConnection:
     BASE = 'https://api.twitch.tv/helix'
 
-    def __init__(self, client_id, scopes, *, loop=None):
+    def __init__(self, client, client_id, scopes, *, loop=None):
+        self._client = client
         self.loop = loop or asyncio.get_event_loop()
         self._client_id = client_id
         self._scopes = scopes
@@ -156,10 +159,36 @@ class HTTPConnection:
             elif isinstance(_from, int) or to.isdigit():
                 return await self.request('GET', f'/users/follows?first={limit}&from_id={_from}')
 
+    async def get_extension_transactions(self, extension, transaction, limit):
+        params = ''
+
+        if not self._client.app_token:
+            raise TwitchException('Client method \'start\' was never called')
+
+        if isinstance(extension, Extension):
+            params += f'?extension_id={extension.id}'
+        elif isinstance(extension, (int, str)):
+            params += f'?extension_id={extension}'
+
+        if isinstance(transaction, list):
+            for trans in transaction:
+                if isinstance(trans, Transaction):
+                    params += f'&id={trans.id}'
+                elif isinstance(trans, str):
+                    params += f'&id={trans}'
+        elif isinstance(transaction, str):
+            params += f'&id={transaction}'
+
+        params += f'&first={limit}'
+
+        return await self.request('GET', f'/extensions/transactions{params}', headers={
+            'Authorization': f'Bearer {self._client.app_token}',
+        })
+
 
 class WSConnection(HTTPConnection):
-    def __init__(self, client_id, scopes, *, loop=None):
-        super().__init__(client_id, scopes, loop=loop)
+    def __init__(self, client, client_id, scopes, *, loop=None):
+        super().__init__(client, client_id, scopes, loop=loop)
 
     async def irc_connect(self, channel, nick, oauth):
         async with aiohttp.ClientSession() as session:

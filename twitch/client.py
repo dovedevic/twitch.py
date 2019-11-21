@@ -17,15 +17,15 @@ from .user import User, PartialUser, BannedPartialUser
 
 class Twitch:
     def __init__(self, client_id, client_secret, *, loop=None, capabilities: list = None):
+        self.app_token = None
         self.coros = []
         self.loop = loop or asyncio.get_event_loop()
-        self._access_token = None
         self._client_id = client_id
         self._client_secret = client_secret
         self._capabilities = capabilities or []
         self._refresh_token = None
-        self.http = HTTPConnection(client_id, self._capabilities, loop=self.loop)
-        self.ws = WSConnection(client_id, [], loop=self.loop)
+        self.http = HTTPConnection(self, client_id, self._capabilities, loop=self.loop)
+        self.ws = WSConnection(self, client_id, [], loop=self.loop)
 
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
     
@@ -45,9 +45,15 @@ class Twitch:
         pass
 
     # https://dev.twitch.tv/docs/api/reference#get-extension-transactions
-    async def get_extension_transactions(self, extension: typing.Union[str, Extension], transaction: typing.Union[str, Transaction] = None, limit: int = 20):
-        # TODO
-        pass
+    async def get_extension_transactions(self, extension: typing.Union[str, Extension], transaction: typing.Union[int, str, Transaction] = None, limit: int = 20):
+        data = await self.http.get_extension_transactions(extension, transaction, limit)
+
+        ret = []
+
+        for trans in data['data']:
+            ret.append(Transaction(trans))
+
+        return ret
 
     # https://dev.twitch.tv/docs/api/reference#create-clip
     async def create_clip(self, stream: typing.Union[int, str, Stream], clip_after_delay: bool = False):
@@ -303,9 +309,39 @@ class Twitch:
         if not self.loop.is_closed():
             self.loop.close()
 
+    def start(self):
+        self.loop.create_task(self._start())
+
+        if not self.loop.is_running():
+            self.loop.run_forever()
+
+    async def _start(self):
+        res = await self.http.rrequest('POST', f'https://id.twitch.tv/oauth2/token?client_id={self._client_id}' +
+                                               f'&client_secret={self._client_secret}&grant_type=client_credentials' +
+                                               f'&scope={" ".join(self._capabilities)}')
+
+        self.app_token = res['access_token']
+        self.loop.create_task(self._refresh_app_token(res['expires_in']))
+
+        for coro in self.coros:
+            await coro
+
+    async def _refresh_app_token(self, initial_time):
+        time = initial_time
+        while not self.is_closed():
+            await asyncio.sleep(time)
+            res = await self.http.request('POST', f'https://id.twitch.tv/oauth2/token?client_id={self._client_id}' +
+                                                  f'&client_secret={self._client_secret}&grant_type=client_credentials' +
+                                                  f'&scope={" ".join(self._capabilities)}')
+
+            self.app_token = res['access_token']
+            time = res['expires_in']
+
     def start_irc(self, channel_name, nickname, oauth):
         self.loop.create_task(self._connect(channel_name, nickname, oauth))
-        self.loop.run_forever()
+
+        if not self.loop.is_running():
+            self.loop.run_forever()
 
     async def _connect(self, name, nick, oauth):
         await self.ws.irc_connect(name, nick, oauth)
