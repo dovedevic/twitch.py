@@ -28,6 +28,7 @@ class Twitch:
         self.ws = WSConnection(self, client_id, [], loop=self.loop)
 
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.close())
+        self.loop.add_signal_handler(signal.SIGINT, lambda: self.close())
     
     # https://dev.twitch.tv/docs/api/reference#get-extension-analytics
     async def get_extension_analytics_url(self, extension: typing.Union[str, Extension] = None, limit: int = 20, started_at: datetime = None, ended_at: datetime = None, analytics_type: str = None):
@@ -97,7 +98,12 @@ class Twitch:
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_game(self, game: typing.Union[int, str, Game, PartialGame]):
         # Alias
-        return await self.get_games(game)
+        data = await self.get_games(game)
+
+        if len(data) < 1:
+            return None
+
+        return data[0]
 
     # https://dev.twitch.tv/docs/api/reference#get-games
     async def get_games(self, *games: typing.Union[int, str, Game, PartialGame]):
@@ -146,6 +152,10 @@ class Twitch:
     # https://dev.twitch.tv/docs/api/reference#get-streams
     async def get_stream(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser]):
         data = await self.http.get_stream(user)
+
+        if len(data['data']) < 1:
+            return None
+
         return Stream(self, data['data'][0])
 
     # https://dev.twitch.tv/docs/api/reference#get-streams
@@ -217,7 +227,12 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-users
     async def get_user(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser]):
-        return await self.get_users(user)
+        data = await self.get_users(user)
+
+        if len(data) < 1:
+            return None
+
+        return data[0]
 
     # https://dev.twitch.tv/docs/api/reference#get-users
     async def get_users(self, *users: typing.Union[int, str, User, PartialUser, BannedPartialUser]):
@@ -285,7 +300,12 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-videos
     async def get_video(self, video: Video):
-        return await self.get_videos(video)
+        data = await self.get_videos(video)
+
+        if len(data) < 1:
+            return None
+
+        return data
 
     # https://dev.twitch.tv/docs/api/reference#get-webhook-subscriptions
     async def get_webhooks(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser], limit: int = 20):
@@ -299,14 +319,11 @@ class Twitch:
     def run_coro_on_start(self, coro):
         self.coros.append(coro)
 
-    async def close(self):
-        if self.http is not None:
-            await self.http.close()
-
+    def close(self):
         if self.loop.is_running():
             self.loop.stop()
 
-        if not self.loop.is_closed():
+        if not self.loop.is_closed() and not self.loop.is_running():
             self.loop.close()
 
     def start(self):
