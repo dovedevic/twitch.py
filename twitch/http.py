@@ -101,7 +101,6 @@ class HTTPConnection:
             return await self.request('GET', f'/streams/?user_id={user}')
 
     async def get_streams(self, users, games, langs, limit):
-        # TODO: Cleanup
         params = f'?first={limit}'
 
         if type(langs) in (tuple, list):
