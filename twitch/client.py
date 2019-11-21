@@ -229,13 +229,12 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#get-users-follows
     async def get_followers(self, user: typing.Union[int, str, Stream, User, PartialUser, BannedPartialUser], limit: int = 20):
-        # TODO: Deal with total, data
         data = await self.http.get_follows(to=user, limit=limit)
 
         ret = []
 
         for user in data['data']:
-            ret.append(PartialUser(self, user))
+            ret.append(PartialUser(user['from_id'], user['from_name']))
 
         return ret
 
@@ -245,8 +244,8 @@ class Twitch:
 
         ret = []
 
-        for user in data:
-            ret.append(PartialUser(self, user))
+        for user in data['data']:
+            ret.append(PartialUser(user['to_id'], user['to_name']))
 
         return ret
 
