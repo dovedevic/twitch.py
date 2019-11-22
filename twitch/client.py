@@ -267,8 +267,7 @@ class Twitch:
         ret = []
 
         for user in data['data']:
-            # TODO: Should this be Follower() ?
-            ret.append(PartialUser(user['to_id'], user['to_name']))
+            ret.append(Follower(user))
 
         return ret
 
