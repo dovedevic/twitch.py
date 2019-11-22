@@ -321,6 +321,9 @@ class Twitch:
         self.coros.append(coro)
 
     def close(self):
+        if not self.http.is_closed():
+            asyncio.run_coroutine_threadsafe(self.http.close(), self.loop)
+
         if self.loop.is_running():
             self.loop.stop()
 

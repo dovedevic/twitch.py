@@ -189,6 +189,9 @@ class HTTPConnection:
             'Authorization': f'Bearer {self._client.app_token}',
         })
 
+    def is_closed(self):
+        return self._session.closed
+
 
 class WSConnection(HTTPConnection):
     def __init__(self, client, client_id, scopes, *, loop=None):
