@@ -47,9 +47,10 @@ class PartialUser:
     """
     Defines a partial twitch user
     """
-    __slots__ = ('_id', '_username')
+    __slots__ = ('_client', '_id', '_username')
 
-    def __init__(self, _id, _username):
+    def __init__(self, client, _id, _username):
+        self._client = client
         self._id = _id
         self._username = _username
 
@@ -81,8 +82,7 @@ class PartialUser:
         return self._username
 
     async def fetch_user(self):
-        # TODO:: return await core.get_user(self._id)
-        pass
+        return await self._client.get_user(self._id)
 
 
 class BannedPartialUser(PartialUser):
@@ -91,8 +91,8 @@ class BannedPartialUser(PartialUser):
     """
     __slots__ = '_expire_time'
 
-    def __init__(self, _id, _username, _expire_time):
-        PartialUser.__init__(self, _id, _username)
+    def __init__(self, _client, _id, _username, _expire_time):
+        PartialUser.__init__(self, _client, _id, _username)
         self._expire_time = get_datetime_from(_expire_time)
 
     def __repr__(self):
