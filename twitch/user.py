@@ -221,13 +221,11 @@ class User(WhisperChannel):
         # TODO:: Insert client integration here. something like return await client.update_user_extensions(self, extensions)
         pass
 
-    async def get_followers(self):
-        # TODO:: Insert client integration here. something like return await client.get_followers(self)
-        pass
+    async def get_followers(self, limit: int = 20):
+        return await self._client.get_followers(self, limit)
 
-    async def get_following(self):
-        # TODO:: Insert client integration here. something like return await client.get_followering(self)
-        pass
+    async def get_following(self, limit: int = 20):
+        return await self._client.get_followings(self, limit)
 
     async def get_clips(self):
         # TODO:: Insert client integration here. something like return await client.get_clips(self)
@@ -242,8 +240,7 @@ class User(WhisperChannel):
         pass
 
     async def get_stream(self):
-        # TODO:: Insert client integration here. something like return await client.get_stream(self)
-        pass
+        return await self._client.get_stream(self)
 
     async def get_videos(self):
         # TODO:: Insert client integration here. something like return await client.get_videos(self)

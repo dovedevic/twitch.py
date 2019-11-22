@@ -6,6 +6,7 @@ from datetime import datetime
 from .clip import Clip
 from .errors import TwitchException
 from .extension import Extension
+from .follower import Follower
 from .game import Game, PartialGame
 from .http import HTTPConnection, WSConnection
 from .stream import Stream
@@ -255,7 +256,7 @@ class Twitch:
         ret = []
 
         for user in data['data']:
-            ret.append(PartialUser(user['from_id'], user['from_name']))
+            ret.append(Follower(user))
 
         return ret
 
@@ -266,6 +267,7 @@ class Twitch:
         ret = []
 
         for user in data['data']:
+            # TODO: Should this be Follower() ?
             ret.append(PartialUser(user['to_id'], user['to_name']))
 
         return ret
