@@ -161,7 +161,7 @@ class HTTPConnection:
         params = ''
 
         if not self._client.app_token:
-            raise TwitchException('Client method \'start\' was never called')
+            raise TwitchException('Client method \'start\' was never called or coro was run before start')
 
         if isinstance(extension, Extension):
             if extension.id != self._client_id:
