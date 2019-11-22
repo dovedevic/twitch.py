@@ -1,7 +1,6 @@
 import aiohttp
 import asyncio
 import logging
-import websocket
 
 from .errors import TwitchException
 from .extension import Extension
