@@ -89,6 +89,7 @@ class Twitch:
 
     # https://dev.twitch.tv/docs/api/reference#redeem-code
     async def redeem_entitlement_code(self, user: typing.Union[int, str, User, PartialUser, BannedPartialUser], code: str):
+        # Alias
         return await self.redeem_entitlement_codes(user, code)
 
     # https://dev.twitch.tv/docs/api/reference#get-top-games
