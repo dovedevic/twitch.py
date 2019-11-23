@@ -348,7 +348,8 @@ class Twitch:
         for coro in self.coros:
             await coro
 
-    async def _refresh_app_token(self, initial_time):
+    async def refresh_app_token(self, initial_time):
+        # TODO: Make public, refresh token only when needed, add try/except unauthorized to http methods
         time = initial_time
         while not self.is_closed():
             await asyncio.sleep(time)
