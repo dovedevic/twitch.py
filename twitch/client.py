@@ -343,22 +343,17 @@ class Twitch:
                                                f'&scope={" ".join(self._capabilities)}')
 
         self.app_token = res['access_token']
-        self.loop.create_task(self._refresh_app_token(res['expires_in']))
 
         for coro in self.coros:
             await coro
 
     async def refresh_app_token(self, initial_time):
-        # TODO: Make public, refresh token only when needed, add try/except unauthorized to http methods
-        time = initial_time
-        while not self.is_closed():
-            await asyncio.sleep(time)
-            res = await self.http.request('POST', f'https://id.twitch.tv/oauth2/token?client_id={self._client_id}' +
-                                                  f'&client_secret={self._client_secret}&grant_type=client_credentials' +
-                                                  f'&scope={" ".join(self._capabilities)}')
+        # TODO: add try/except unauthorized to http methods
+        res = await self.http.request('POST', f'https://id.twitch.tv/oauth2/token?client_id={self._client_id}' +
+                                              f'&client_secret={self._client_secret}&grant_type=client_credentials' +
+                                              f'&scope={" ".join(self._capabilities)}')
 
-            self.app_token = res['access_token']
-            time = res['expires_in']
+        self.app_token = res['access_token']
 
     def start_irc(self, channel_name, nickname, oauth):
         self.loop.create_task(self._connect(channel_name, nickname, oauth))

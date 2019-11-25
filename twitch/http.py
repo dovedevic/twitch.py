@@ -78,11 +78,7 @@ class HTTPConnection:
         elif isinstance(games[0], int) or games[0].isdigit():
             params += f'?id={games[0]}'
 
-        for g in games:
-            # Skip over first game as its already provided in params
-            if games.index(g) == 0:
-                continue
-
+        for g in games[1:]:
             if isinstance(g, str) and not g.isdigit():
                 params += f'&name={g}'
             elif isinstance(g, int) or g.isdigit():
