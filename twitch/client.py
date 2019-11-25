@@ -347,7 +347,7 @@ class Twitch:
         for coro in self.coros:
             await coro
 
-    async def refresh_app_token(self, initial_time):
+    async def refresh_app_token(self):
         # TODO: add try/except unauthorized to http methods
         res = await self.http.request('POST', f'https://id.twitch.tv/oauth2/token?client_id={self._client_id}' +
                                               f'&client_secret={self._client_secret}&grant_type=client_credentials' +
@@ -356,12 +356,12 @@ class Twitch:
         self.app_token = res['access_token']
 
     def start_irc(self, channel_name, nickname, oauth):
-        self.loop.create_task(self._connect(channel_name, nickname, oauth))
+        self.loop.create_task(self.connect(channel_name, nickname, oauth))
 
         if not self.loop.is_running():
             self.loop.run_forever()
 
-    async def _connect(self, name, nick, oauth):
+    async def connect(self, name, nick, oauth):
         await self.ws.irc_connect(name, nick, oauth)
 
     def is_closed(self):
