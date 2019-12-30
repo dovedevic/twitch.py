@@ -10,9 +10,9 @@ class Follower:
 
     __slots__ = ('_follower', '_following', '_followed_at')
 
-    def __init__(self, data):
-        self._follower = PartialUser(data['from_id'], data['from_name'])
-        self._following = PartialUser(data['to_id'], data['to_name'])
+    def __init__(self, client, data):
+        self._follower = PartialUser(client, data['from_id'], data['from_name'])
+        self._following = PartialUser(client, data['to_id'], data['to_name'])
         self._followed_at = get_datetime_from(data['followed_at'])
 
     def __eq__(self, other):
