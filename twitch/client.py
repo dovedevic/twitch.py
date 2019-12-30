@@ -268,7 +268,7 @@ class Twitch:
         ret = []
 
         for user in data['data']:
-            ret.append(Follower(user))
+            ret.append(Follower(self, user))
 
         return ret
 
